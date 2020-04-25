@@ -27,10 +27,10 @@
     },
     "scripts": {
         "start": "react-scripts start",
-        "build": "react-scripts build",
         "test": "react-scripts test",
         "lint": "eslint ./src/**/*.{ts,tsx}",
-        "deploy": "firebase deploy"
+        "build": "npm run lint && react-scripts test --watchAll=false && react-scripts build",
+        "deploy": "npm run build && npm pack && firebase deploy"
     },
     "eslintConfig": {
         "extends": "react-app",
