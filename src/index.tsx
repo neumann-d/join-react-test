@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-import { blueGrey, teal, red,  } from "@material-ui/core/colors";
+import { blueGrey, grey, teal, red } from "@material-ui/core/colors";
 
 import App from "./App";
 
@@ -18,7 +18,7 @@ const theme = createMuiTheme({
       main: red.A400,
     },
     background: {
-      default: "#fafbfd",
+      default: grey[100],
     },
   },
 });
