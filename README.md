@@ -52,7 +52,7 @@ Linter, CSSinJS is a plus
 You don't have to finish all of that, but we would really love to see a working piece.
 What's more important for us is to see your way of thinking and priority on tasks during implementation!
 
-## Solution
+# Solution
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
