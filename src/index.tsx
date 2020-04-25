@@ -1,8 +1,9 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import { blueGrey, cyan, grey, red } from '@material-ui/core/colors';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import { blueGrey, grey, teal, red } from '@material-ui/core/colors';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 import App from './App';
 
@@ -12,7 +13,7 @@ const theme = createMuiTheme({
             main: blueGrey[900],
         },
         secondary: {
-            main: teal.A200,
+            main: cyan.A100,
         },
         error: {
             main: red.A400,
@@ -26,8 +27,10 @@ const theme = createMuiTheme({
 ReactDOM.render(
     <React.StrictMode>
         <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <App />
+            <Router>
+                <CssBaseline />
+                <App />
+            </Router>
         </ThemeProvider>
     </React.StrictMode>,
     document.getElementById('root')
