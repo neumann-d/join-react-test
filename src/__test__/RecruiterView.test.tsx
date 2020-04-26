@@ -4,10 +4,10 @@ import React, { useState } from 'react';
 import RecruiterView from '../pages/RecruiterView';
 import { Candidate, Candidates } from '../common/types';
 
-test('add candidate and rendering in recruiter tab', () => {
+test('add candidate and rendering in recruiter tab', async () => {
     let candidate: HTMLElement = document.createElement('div');
     const fullName = 'Bob Test';
-    const email = `bob.test${Math.random() * 1000}@invalidmail`; // use invalid to avoid clashes with real data
+    const email = `bob.test@example.com`;
     const newCandidate: Candidate = {
         email,
         fullName,
@@ -25,10 +25,8 @@ test('add candidate and rendering in recruiter tab', () => {
         return <RecruiterView useCandidatesState={[candidates, setCandidates]} />;
     };
 
-    act(() => {
-        const { getByText } = render(<TestRecruiterViewComponent />);
-        candidate = getByText(email);
-    });
+    const { findByText } = render(<TestRecruiterViewComponent />);
+    candidate = await findByText(email);
 
     expect(candidate).toBeInTheDocument();
-}, 30000);
+});
