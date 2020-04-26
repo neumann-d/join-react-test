@@ -66,7 +66,6 @@ const CandidateView = ({
     }
 
     const handleChange = (prop: keyof Candidate) => (event: React.ChangeEvent<HTMLInputElement>) => {
-        console.log('handleChange');
         setShowErrorMessage('');
         setCandidate({ ...candidate, [prop]: event.target.value });
     };
@@ -131,6 +130,7 @@ const CandidateView = ({
                                         placeholder="john.doe@example.com"
                                         onChange={handleChange('email')}
                                         helperText={showErrorMessage}
+                                        value={candidate.email}
                                     />
                                 </FormControl>
                             </Grid>
@@ -142,6 +142,7 @@ const CandidateView = ({
                                         variant="outlined"
                                         placeholder="John Doe"
                                         onChange={handleChange('fullName')}
+                                        value={candidate.fullName}
                                     />
                                 </FormControl>
                             </Grid>
@@ -154,6 +155,7 @@ const CandidateView = ({
                                         type="password"
                                         placeholder="Choose a password"
                                         onChange={handleChange('password')}
+                                        value={candidate.password}
                                     />
                                 </FormControl>
                             </Grid>
@@ -165,12 +167,14 @@ const CandidateView = ({
                                         variant="outlined"
                                         placeholder="1231122890"
                                         onChange={handleChange('phone')}
+                                        value={candidate.phone}
                                     />
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12}>
                                 <FormControl className={classes.formControl}>
                                     <Button
+                                        id="candidate-form-submit"
                                         color="primary"
                                         variant="contained"
                                         onClick={handleSaveCandidate}

@@ -3,7 +3,7 @@ import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Router } from 'react-router-dom';
 
-import App from './App';
+import App from '../App';
 
 test('renders candidate/recruiter tab links', () => {
     const history = createMemoryHistory();

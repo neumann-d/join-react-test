@@ -1,8 +1,8 @@
 import { act, render } from '@testing-library/react';
 import React, { useState } from 'react';
 
-import RecruiterView from './index';
-import { Candidate, Candidates } from '../../common/types';
+import RecruiterView from '../pages/RecruiterView';
+import { Candidate, Candidates } from '../common/types';
 
 test('add candidate and rendering in recruiter tab', () => {
     let candidate: HTMLElement = document.createElement('div');
