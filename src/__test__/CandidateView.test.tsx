@@ -1,6 +1,6 @@
 import { render, fireEvent } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Router } from 'react-router-dom';
 
 import CandidateView from '../pages/CandidateView';

@@ -32,6 +32,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 // TODO: avoid prop drilling (candidates) -> use better Context API or Redux
+// TODO: make global candidates state safe (that is is not overridden while update) -> Redux
 const App = () => {
     const classes = useStyles();
 
@@ -52,10 +53,7 @@ const App = () => {
             }
         };
 
-        setTimeout(() => {
-            console.log('This will run after 5 seconds!');
-            fetchData();
-        }, 5000);
+        fetchData();
     }, [candidates]);
 
     return (
