@@ -11,7 +11,7 @@ import ViewListIcon from '@material-ui/icons/ViewList';
 import React, { useEffect, useState } from 'react';
 import { Link, Redirect, Route, Switch, useLocation } from 'react-router-dom';
 
-import RecruiterView from './pages/RecruiterView';
+import RecruiterView from './pages';
 import { Candidates } from './common/types';
 import { loadData, saveData } from './store';
 

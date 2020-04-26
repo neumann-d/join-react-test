@@ -1,5 +1,18 @@
 import { Candidate, Candidates } from '../common/types';
 
+const calculateScore = (candidatesArrayIn: Candidate[]) => {
+    const candidatesArray = [...candidatesArrayIn];
+    candidatesArray.forEach(candidate => {
+        candidate.score =
+            (candidate.fullName ? 0.1 : 0) +
+            (candidate.email ? 0.1 : 0) +
+            (candidate.password ? 0.1 : 0) +
+            (candidate.phone ? 0.2 : 0) +
+            (candidate.avatar ? 0.5 : 0);
+    });
+    return candidatesArray;
+};
+
 // load existing candidate from local browser storage, otherwise fetch from API or local JSON
 export const loadData = async () => {
     let candidates: Candidates = {};
@@ -26,6 +39,14 @@ export const loadData = async () => {
                 // console.log('fetched local result = ', candidatesArray);
             } catch (e) {}
         }
+
+        // set deleted to false by default
+        candidatesArray.forEach(candidate => {
+            candidate.deleted = false;
+        });
+
+        // set application score
+        candidatesArray = calculateScore(candidatesArray);
 
         // transform array to Candidates object
         candidates = candidatesArray.reduce((acc: Candidates, candidate) => {

@@ -7,6 +7,8 @@ export interface Candidate {
     avatar: string;
     applied_on: string;
     state: string;
+    score: number,
+    deleted: boolean
 }
 
 export interface Candidates {
