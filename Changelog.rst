@@ -4,6 +4,15 @@
 join-react-test Changelog
 ===========================
 
+[0.3.0] - 2020-04-27
+^^^^^^^^^^^^^^^^^^^^
+
+Improvements
+------------
+- Show bigger loading bar
+- Refactoring: make CandidateCard a stateless component, remove unused imports
+
+
 [0.3.0] - 2020-04-26
 ^^^^^^^^^^^^^^^^^^^^
 
