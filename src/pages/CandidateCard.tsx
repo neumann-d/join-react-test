@@ -4,11 +4,16 @@ import CardContent from '@material-ui/core/CardContent';
 import Chip from '@material-ui/core/Chip';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
-import React from 'react';
+import React, { useState } from 'react';
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 
-import { Candidate } from '../common/types';
+import { Candidates } from '../common/types';
+import { saveData } from '../store';
 
 const useStyles = makeStyles(theme => ({
     cardRoot: {
@@ -24,15 +29,43 @@ const useStyles = makeStyles(theme => ({
         top: '10px',
         left: '6px',
         fontSize: 12
-    },
+    }
 }));
 
-const CandidateCard = ({ candidateKey, candidate }: { candidateKey: string, candidate: Candidate }) => {
+const CandidateCard = ({
+    candidateKey,
+    useCandidatesState
+}: {
+    candidateKey: string;
+    useCandidatesState: [Candidates, React.Dispatch<React.SetStateAction<Candidates>>];
+}) => {
     const classes = useStyles();
+    
+    // menu state
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    
+    const [candidates, setCandidates] = useCandidatesState;
+    const candidate = candidates[candidateKey];
 
-    if (!candidate) {
+
+    if (!candidate || candidate.deleted) {
         return null;
     }
+
+    const handleClickMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleCloseMenu = () => {
+        setAnchorEl(null);
+    };
+
+    const handleDelete = (candidateKey: string) => {
+        candidates[candidateKey].deleted = true;
+        saveData(candidates);
+        setCandidates(candidates);
+        handleCloseMenu();
+    };
 
     return (
         <Card key={candidateKey} className={classes.cardRoot}>
@@ -58,6 +91,23 @@ const CandidateCard = ({ candidateKey, candidate }: { candidateKey: string, cand
                             </Typography>
                             <CircularProgress variant="static" value={candidate.score * 100} />
                         </div>
+                        <IconButton
+                            aria-label="more"
+                            aria-controls="candidate-menu"
+                            aria-haspopup="true"
+                            onClick={handleClickMenu}
+                        >
+                            <MoreHorizIcon />
+                        </IconButton>
+                        <Menu
+                            id="candidate-menu"
+                            anchorEl={anchorEl}
+                            keepMounted
+                            open={Boolean(anchorEl)}
+                            onClose={handleCloseMenu}
+                        >
+                            <MenuItem onClick={() => handleDelete(candidateKey)}>Delete</MenuItem>
+                        </Menu>
                     </Grid>
                 </Grid>
             </CardContent>

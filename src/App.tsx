@@ -30,6 +30,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
+// TODO: avoid prop drilling (candidates)
 const App = () => {
     const classes = useStyles();
 
@@ -96,7 +97,7 @@ const App = () => {
             </AppBar>
             <Switch>
                 {/* <Route component={() => <App />} exact path={candidatePath} /> */}
-                <Route component={() => <RecruiterView candidates={candidates} />} exact path={recruiterPath} />
+                <Route component={() => <RecruiterView useCandidatesState={[candidates, setCandidates]} />} exact path={recruiterPath} />
                 <Redirect to={recruiterPath} />
             </Switch>
         </>

@@ -5,10 +5,14 @@ import Typography from '@material-ui/core/Typography';
 import React from 'react';
 
 import { Candidates } from '../common/types';
-import CandidateCard from './CandidateCard'
+import CandidateCard from './CandidateCard';
 
-const RecruiterView = ({ candidates }: { candidates: Candidates }) => {
-
+const RecruiterView = ({
+    useCandidatesState
+}: {
+    useCandidatesState: [Candidates, React.Dispatch<React.SetStateAction<Candidates>>];
+}) => {
+    const candidates = useCandidatesState[0];
     const candidateKeys = Object.keys(candidates);
 
     if (candidateKeys.length === 0) {
@@ -23,8 +27,13 @@ const RecruiterView = ({ candidates }: { candidates: Candidates }) => {
                         {candidateKeys.length} applications submitted
                     </Typography>
                     {candidateKeys.map(candidateKey => {
-                        const candidate = candidates[candidateKey];
-                        return <CandidateCard key={candidateKey} candidateKey={candidateKey} candidate={candidate} />;
+                        return (
+                            <CandidateCard
+                                key={candidateKey}
+                                candidateKey={candidateKey}
+                                useCandidatesState={useCandidatesState}
+                            />
+                        );
                     })}
                 </>
             </Box>
