@@ -61,10 +61,6 @@ const CandidateView = ({
     const [showErrorMessage, setShowErrorMessage] = useState('');
     const [avatar, setAvatar] = useState('');
 
-    if (candidateKeys.length === 0) {
-        return <LinearProgress color="secondary" />;
-    }
-
     const handleChange = (prop: keyof Candidate) => (event: React.ChangeEvent<HTMLInputElement>) => {
         setShowErrorMessage('');
         setCandidate({ ...candidate, [prop]: event.target.value });
@@ -84,7 +80,7 @@ const CandidateView = ({
                 state: CandidateState.STATE_SUBMITTED,
                 applied_on: `${now.getUTCDate()}.${now.getUTCMonth() + 1}.${now.getUTCFullYear()}`
             };
-            candidates[candidate.email] = candidateData
+            candidates[candidate.email] = candidateData;
 
             // calculate score
             candidates[candidate.email].score = calculateScore(candidateData);
@@ -101,94 +97,99 @@ const CandidateView = ({
         }
     };
 
+    const fetchDataLoading = candidateKeys.length === 0;
+
     return (
-        <Container maxWidth="sm">
-            <Box my={4}>
-                <>
-                    <Typography variant="h6" component="h1" gutterBottom>
-                        Interested in this job?
-                    </Typography>
-                    <form className={classes.formContainer}>
-                        <Grid container spacing={3}>
-                            <Grid item xs={12}>
-                                <FormControl className={classes.formControl}>
-                                    <Avatar className={classes.avatar} alt={candidate.fullName} src={avatar} />
-                                    <CandidateAvatarUpload
-                                        useAvatarState={[avatar, setAvatar]}
-                                        buttonText={avatar ? 'Change picture' : 'Upload picture'}
-                                    />
-                                </FormControl>
+        <>
+            {fetchDataLoading && <LinearProgress style={{ height: '1ch' }} color="secondary" />}
+            <Container maxWidth="sm">
+                <Box my={4}>
+                    <>
+                        <Typography variant="h6" component="h1" gutterBottom>
+                            Interested in this job?
+                        </Typography>
+                        <form className={classes.formContainer}>
+                            <Grid container spacing={3}>
+                                <Grid item xs={12}>
+                                    <FormControl className={classes.formControl}>
+                                        <Avatar className={classes.avatar} alt={candidate.fullName} src={avatar} />
+                                        <CandidateAvatarUpload
+                                            useAvatarState={[avatar, setAvatar]}
+                                            buttonText={avatar ? 'Change picture' : 'Upload picture'}
+                                        />
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <FormControl className={classes.formControl}>
+                                        <TextField
+                                            required
+                                            error={showErrorMessage.length > 0}
+                                            label="Your E-mail"
+                                            id="candidate-form-email"
+                                            variant="outlined"
+                                            placeholder="john.doe@example.com"
+                                            onChange={handleChange('email')}
+                                            helperText={showErrorMessage}
+                                            value={candidate.email}
+                                        />
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <FormControl className={classes.formControl}>
+                                        <TextField
+                                            label="Full Name"
+                                            id="candidate-form-full-name"
+                                            variant="outlined"
+                                            placeholder="John Doe"
+                                            onChange={handleChange('fullName')}
+                                            value={candidate.fullName}
+                                        />
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <FormControl className={classes.formControl}>
+                                        <TextField
+                                            label="Password"
+                                            id="candidate-form-password"
+                                            variant="outlined"
+                                            type="password"
+                                            placeholder="Choose a password"
+                                            onChange={handleChange('password')}
+                                            value={candidate.password}
+                                        />
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <FormControl className={classes.formControl}>
+                                        <TextField
+                                            label="Phone Number"
+                                            id="candidate-form-phone-number"
+                                            variant="outlined"
+                                            placeholder="1231122890"
+                                            onChange={handleChange('phone')}
+                                            value={candidate.phone}
+                                        />
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <FormControl className={classes.formControl}>
+                                        <Button
+                                            id="candidate-form-submit"
+                                            color="primary"
+                                            variant="contained"
+                                            onClick={handleSaveCandidate}
+                                            size="large"
+                                        >
+                                            Apply for this job
+                                        </Button>
+                                    </FormControl>
+                                </Grid>
                             </Grid>
-                            <Grid item xs={12}>
-                                <FormControl className={classes.formControl}>
-                                    <TextField
-                                        required
-                                        error={showErrorMessage.length > 0}
-                                        label="Your E-mail"
-                                        id="candidate-form-email"
-                                        variant="outlined"
-                                        placeholder="john.doe@example.com"
-                                        onChange={handleChange('email')}
-                                        helperText={showErrorMessage}
-                                        value={candidate.email}
-                                    />
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <FormControl className={classes.formControl}>
-                                    <TextField
-                                        label="Full Name"
-                                        id="candidate-form-full-name"
-                                        variant="outlined"
-                                        placeholder="John Doe"
-                                        onChange={handleChange('fullName')}
-                                        value={candidate.fullName}
-                                    />
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <FormControl className={classes.formControl}>
-                                    <TextField
-                                        label="Password"
-                                        id="candidate-form-password"
-                                        variant="outlined"
-                                        type="password"
-                                        placeholder="Choose a password"
-                                        onChange={handleChange('password')}
-                                        value={candidate.password}
-                                    />
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <FormControl className={classes.formControl}>
-                                    <TextField
-                                        label="Phone Number"
-                                        id="candidate-form-phone-number"
-                                        variant="outlined"
-                                        placeholder="1231122890"
-                                        onChange={handleChange('phone')}
-                                        value={candidate.phone}
-                                    />
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <FormControl className={classes.formControl}>
-                                    <Button
-                                        id="candidate-form-submit"
-                                        color="primary"
-                                        variant="contained"
-                                        onClick={handleSaveCandidate}
-                                        size="large"
-                                    >
-                                        Apply for this job
-                                    </Button>
-                                </FormControl>
-                            </Grid>
-                        </Grid>
-                    </form>
-                </>
-            </Box>
-        </Container>
+                        </form>
+                    </>
+                </Box>
+            </Container>
+        </>
     );
 };
 

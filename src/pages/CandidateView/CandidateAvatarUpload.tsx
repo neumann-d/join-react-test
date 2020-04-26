@@ -27,7 +27,9 @@ const CandidateAvatarUpload = ({
 
     return (
         <div>
-            <Button onClick={handleOpen} variant="contained">{buttonText}</Button>
+            <Button onClick={handleOpen} variant="contained">
+                {buttonText}
+            </Button>
             <DropzoneDialog
                 open={open}
                 onSave={handleSave}

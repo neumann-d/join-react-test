@@ -6,6 +6,7 @@ import React from 'react';
 
 import { Candidates } from '../../common/types';
 import CandidateCard from './CandidateCard';
+import CandidateCardMenu from './CandidateCardMenu';
 
 const RecruiterView = ({
     useCandidatesState
@@ -16,7 +17,7 @@ const RecruiterView = ({
     const candidateKeys = Object.keys(candidates);
 
     if (candidateKeys.length === 0) {
-        return <LinearProgress color="secondary" />;
+        return <LinearProgress style={{ height: '1ch' }} color="secondary" />;
     }
 
     return (
@@ -27,11 +28,15 @@ const RecruiterView = ({
                         {candidateKeys.length} applications submitted
                     </Typography>
                     {candidateKeys.map(candidateKey => {
+                        const menu = (
+                            <CandidateCardMenu candidateKey={candidateKey} useCandidatesState={useCandidatesState} />
+                        );
                         return (
                             <CandidateCard
                                 key={candidateKey}
                                 candidateKey={candidateKey}
-                                useCandidatesState={useCandidatesState}
+                                candidate={candidates[candidateKey]}
+                                menu={menu}
                             />
                         );
                     })}

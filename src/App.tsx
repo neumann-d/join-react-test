@@ -52,7 +52,10 @@ const App = () => {
             }
         };
 
-        fetchData();
+        setTimeout(() => {
+            console.log('This will run after 5 seconds!');
+            fetchData();
+        }, 5000);
     }, [candidates]);
 
     return (
