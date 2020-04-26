@@ -4,7 +4,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
 
-import { Candidates } from '../common/types';
+import { Candidates } from '../../common/types';
 import CandidateCard from './CandidateCard';
 
 const RecruiterView = ({

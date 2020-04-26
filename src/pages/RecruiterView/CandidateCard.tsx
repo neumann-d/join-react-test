@@ -21,8 +21,8 @@ import Typography from '@material-ui/core/Typography';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import React, { useState } from 'react';
 
-import { Candidates, CandidateState } from '../common/types';
-import { saveData } from '../store';
+import { Candidates, CandidateState } from '../../common/types';
+import { saveData } from '../../store';
 
 const useStyles = makeStyles(theme => ({
     cardRoot: {

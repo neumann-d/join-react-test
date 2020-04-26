@@ -11,7 +11,7 @@ import ViewListIcon from '@material-ui/icons/ViewList';
 import React, { useEffect, useState } from 'react';
 import { Link, Redirect, Route, Switch, useLocation } from 'react-router-dom';
 
-import RecruiterView from './pages';
+import RecruiterView from './pages/RecruiterView';
 import { Candidates } from './common/types';
 import { loadData, saveData } from './store';
 
@@ -96,8 +96,20 @@ const App = () => {
                 </Toolbar>
             </AppBar>
             <Switch>
-                {/* <Route component={() => <App />} exact path={candidatePath} /> */}
-                <Route component={() => <RecruiterView useCandidatesState={[candidates, setCandidates]} />} exact path={recruiterPath} />
+                <Route
+                    component={() => (
+                        <Typography variant="h6">
+                            Coming soon ...
+                        </Typography>
+                    )}
+                    exact
+                    path={candidatePath}
+                />
+                <Route
+                    component={() => <RecruiterView useCandidatesState={[candidates, setCandidates]} />}
+                    exact
+                    path={recruiterPath}
+                />
                 <Redirect to={recruiterPath} />
             </Switch>
         </>
