@@ -9,3 +9,10 @@ export const calculateScore = (candidate: Candidate) => {
         (candidate.avatar ? 0.5 : 0);
     return score;
 };
+
+export const toBase64 = (file: File) => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+});

@@ -1,20 +1,27 @@
+import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
+import FormControl from '@material-ui/core/FormControl';
+import Grid from '@material-ui/core/Grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import React, { useState } from 'react';
-import FormControl from '@material-ui/core/FormControl';
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
 import { useHistory } from 'react-router-dom';
 
 import { Candidate, Candidates, CandidateState } from '../../common/types';
-import { saveData } from '../../store';
 import { calculateScore } from '../../common/utils';
+import { saveData } from '../../store';
+import CandidateAvatarUpload from './CandidateAvatarUpload';
 
 const useStyles = makeStyles(theme => ({
+    avatar: {
+        margin: theme.spacing(2),
+        height: '10ch',
+        width: '10ch'
+    },
     formContainer: {
         display: 'flex',
         flexWrap: 'wrap'
@@ -50,8 +57,9 @@ const CandidateView = ({
         score: 0,
         state: ''
     };
-    const [candidate, setCandidate] = useState<Candidate>(emptyCandidate);
-    const [showErrorMessage, setShowErrorMessage] = useState<string>('');
+    const [candidate, setCandidate] = useState(emptyCandidate);
+    const [showErrorMessage, setShowErrorMessage] = useState('');
+    const [avatar, setAvatar] = useState('');
 
     if (candidateKeys.length === 0) {
         return <LinearProgress color="secondary" />;
@@ -63,7 +71,7 @@ const CandidateView = ({
         setCandidate({ ...candidate, [prop]: event.target.value });
     };
 
-    const handleSaveCandidate = () => {
+    const handleSaveCandidate = async () => {
         if (!candidate.email) {
             setShowErrorMessage('E-mail is required!');
         } else if (candidate.email in candidates) {
@@ -71,12 +79,16 @@ const CandidateView = ({
             setShowErrorMessage('E-mail already in use!');
         } else {
             const now = new Date();
-            candidates[candidate.email] = {
+            const candidateData = {
                 ...candidate,
-                score: calculateScore(candidate),
+                avatar,
                 state: CandidateState.STATE_SUBMITTED,
                 applied_on: `${now.getUTCDate()}.${now.getUTCMonth() + 1}.${now.getUTCFullYear()}`
             };
+            candidates[candidate.email] = candidateData
+
+            // calculate score
+            candidates[candidate.email].score = calculateScore(candidateData);
 
             // save candidate in local storage and global state
             saveData(candidates);
@@ -99,6 +111,15 @@ const CandidateView = ({
                     </Typography>
                     <form className={classes.formContainer}>
                         <Grid container spacing={3}>
+                            <Grid item xs={12}>
+                                <FormControl className={classes.formControl}>
+                                    <Avatar className={classes.avatar} alt={candidate.fullName} src={avatar} />
+                                    <CandidateAvatarUpload
+                                        useAvatarState={[avatar, setAvatar]}
+                                        buttonText={avatar ? 'Change picture' : 'Upload picture'}
+                                    />
+                                </FormControl>
+                            </Grid>
                             <Grid item xs={12}>
                                 <FormControl className={classes.formControl}>
                                     <TextField

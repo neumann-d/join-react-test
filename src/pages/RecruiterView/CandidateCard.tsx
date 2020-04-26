@@ -25,10 +25,23 @@ import { Candidates, CandidateState } from '../../common/types';
 import { saveData } from '../../store';
 
 const useStyles = makeStyles(theme => ({
+    avatar: {
+        margin: theme.spacing(1),
+        height: '6ch',
+        width: '6ch'
+    },
     cardRoot: {
         minWidth: 275,
         marginBottom: theme.spacing(2),
         fontSize: 14
+    },
+    formContainer: {
+        display: 'flex',
+        flexWrap: 'wrap'
+    },
+    formControl: {
+        margin: theme.spacing(1),
+        minWidth: 200
     },
     progressWrapper: {
         position: 'relative'
@@ -38,14 +51,6 @@ const useStyles = makeStyles(theme => ({
         top: '10px',
         left: '6px',
         fontSize: 12
-    },
-    formContainer: {
-        display: 'flex',
-        flexWrap: 'wrap'
-    },
-    formControl: {
-        margin: theme.spacing(1),
-        minWidth: 200
     }
 }));
 
@@ -117,7 +122,7 @@ const CandidateCard = ({
             <CardContent>
                 <Grid container alignItems="center" justify="space-between">
                     <Grid item xs={2}>
-                        <Avatar alt={candidate.fullName} src={candidate.avatar} />
+                        <Avatar className={classes.avatar} alt={candidate.fullName} src={candidate.avatar} />
                     </Grid>
                     <Grid item xs={9}>
                         <Typography variant="h6" component="h2">
@@ -177,9 +182,7 @@ const CandidateCard = ({
                                     </form>
                                 </DialogContent>
                                 <DialogActions>
-                                    <Button onClick={handleCloseChangeStateDialog}>
-                                        Cancel
-                                    </Button>
+                                    <Button onClick={handleCloseChangeStateDialog}>Cancel</Button>
                                     <Button onClick={handleChangeState} variant="contained" color="primary">
                                         Ok
                                     </Button>
