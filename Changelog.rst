@@ -4,6 +4,16 @@
 join-react-test Changelog
 ===========================
 
+[0.3.0] - 2020-04-26
+^^^^^^^^^^^^^^^^^^^^
+
+Improvements
+------------
+- Candidate View: Add input form elements and avatar uploader, create a new Candidate on form submit
+- Recruiter View: Increase Avatar size
+- Refactoring: Move tests into `__test__` directory
+
+
 [0.2.0] - 2020-04-26
 ^^^^^^^^^^^^^^^^^^^^
 
