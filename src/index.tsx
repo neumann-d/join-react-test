@@ -10,28 +10,28 @@ import App from './App';
 const theme = createMuiTheme({
     palette: {
         primary: {
-            main: blueGrey[900],
+            main: blueGrey[900]
         },
         secondary: {
-            main: cyan.A100,
+            main: cyan.A100
         },
         error: {
-            main: red.A400,
+            main: red.A400
         },
         background: {
-            default: grey[100],
-        },
-    },
+            default: grey[100]
+        }
+    }
 });
 
 ReactDOM.render(
-    <React.StrictMode>
-        <ThemeProvider theme={theme}>
-            <Router>
-                <CssBaseline />
-                <App />
-            </Router>
-        </ThemeProvider>
-    </React.StrictMode>,
+    // <React.StrictMode>
+    <ThemeProvider theme={theme}>
+        <Router>
+            <CssBaseline />
+            <App />
+        </Router>
+    </ThemeProvider>,
+    // </React.StrictMode>,
     document.getElementById('root')
 );
