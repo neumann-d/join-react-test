@@ -79,9 +79,7 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.<br />
 Your app is ready to be deployed!
 
-## Deployment
-
-This app is deployed to Google Firebase: https://join-react-test.web.app
+### `npm run deploy`
 
 Deployment setup (uses existing `firebase.json` of this project):
 ```
@@ -89,7 +87,8 @@ $ firebase login
 $ firebase use YOUR_FIREBASE_PROJECT_NAME
 ```
 
-Deploy to Firebase:
-```
-$ npm run deploy
-```
+This app is deployed to Google Firebase: https://join-react-test.web.app
+
+## Candidates Data
+
+All candidates data is stored in local storage of the browser. To refetch initial data from API, just delete the data with key `candidates` from local storage.
