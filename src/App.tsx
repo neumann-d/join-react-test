@@ -9,10 +9,11 @@ import Typography from '@material-ui/core/Typography';
 import PersonIcon from '@material-ui/icons/Person';
 import ViewListIcon from '@material-ui/icons/ViewList';
 import React, { useEffect, useState } from 'react';
-import { Link, Redirect, Route, Switch } from 'react-router-dom';
+import { Link, Redirect, Route, Switch, useLocation } from 'react-router-dom';
 
 import RecruiterView from './pages/RecruiterView';
-import { Candidate, Candidates } from './common/types';
+import { Candidates } from './common/types';
+import { loadData, saveData } from './store';
 
 const useStyles = makeStyles(theme => ({
     logoBox: {
@@ -32,36 +33,20 @@ const useStyles = makeStyles(theme => ({
 const App = () => {
     const classes = useStyles();
 
-    const [tabIndex, setTabIndex] = useState(1);
+    const pathName = (useLocation() || {}).pathname;
+    const candidatePath = '/candidate';
+    const recruiterPath = '/recruiter';
+
+    const [tabIndex, setTabIndex] = useState(candidatePath === pathName ? 0 : 1);
     const [candidates, setCandidates] = useState<Candidates>({});
 
     // try to fetch from API, otherwise use local JSON file
     useEffect(() => {
         const fetchData = async () => {
             if (Object.keys(candidates).length === 0) {
-                // try to fetch from API, otherwise use local JSON file
-                let candidatesArray: Candidate[] = [];
-                try {
-                    const apiResult = await fetch('https://candidates.free.beeceptor.com/api/candidate');
-                    candidatesArray = await apiResult.json();
-                    // console.log('fetched api result = ', candidatesArray);
-                } catch (e) {
-                    // console.log(e);
-                    try {
-                        const localResult = await fetch('/candidates.json');
-                        candidatesArray = await localResult.json();
-                        // console.log('fetched local result = ', candidatesArray);
-                    } catch (e) {}
-                }
-
-                if (candidatesArray.length > 0) {
-                    const candidatesData = candidatesArray.reduce((acc: Candidates, candidate) => {
-                        acc[candidate.email] = candidate;
-                        return acc;
-                    }, {});
-    
-                    setCandidates(candidatesData);
-                }
+                const candidatesData = await loadData();
+                saveData(candidatesData);
+                setCandidates(candidatesData);
             }
         };
 
@@ -74,7 +59,7 @@ const App = () => {
                 <Toolbar>
                     <Grid container alignItems="center">
                         <Grid item md={4} xs={6} className={classes.logoBox}>
-                            <Avatar component={Link} to="/recruiter" alt="Logo" src="/logo192.png" />
+                            <Avatar component={Link} to={recruiterPath} alt="Logo" src="/logo192.png" />
                             <Typography variant="h6" className={classes.title}>
                                 {process.env.REACT_APP_NAME} {process.env.REACT_APP_VERSION}
                             </Typography>
@@ -91,7 +76,7 @@ const App = () => {
                                 <Tab
                                     id="candidate-tab"
                                     component={Link}
-                                    to="/candidate"
+                                    to={candidatePath}
                                     className={classes.tab}
                                     icon={<PersonIcon />}
                                     label="Candidate"
@@ -99,7 +84,7 @@ const App = () => {
                                 <Tab
                                     id="recruiter-tab"
                                     component={Link}
-                                    to="/recruiter"
+                                    to={recruiterPath}
                                     className={classes.tab}
                                     icon={<ViewListIcon />}
                                     label="Recruiter"
@@ -110,9 +95,9 @@ const App = () => {
                 </Toolbar>
             </AppBar>
             <Switch>
-                {/* <Route component={() => <App />} exact path="/candidate" />  */}
-                <Route component={() => <RecruiterView candidates={candidates} />} exact path="/recruiter" />
-                <Redirect to="/recruiter" />
+                {/* <Route component={() => <App />} exact path={candidatePath} /> */}
+                <Route component={() => <RecruiterView candidates={candidates} />} exact path={recruiterPath} />
+                <Redirect to={recruiterPath} />
             </Switch>
         </>
     );
