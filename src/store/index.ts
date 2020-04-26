@@ -1,14 +1,10 @@
 import { Candidate, Candidates } from '../common/types';
+import { calculateScore } from '../common/utils';
 
-const calculateScore = (candidatesArrayIn: Candidate[]) => {
+const calculateScores = (candidatesArrayIn: Candidate[]) => {
     const candidatesArray = [...candidatesArrayIn];
     candidatesArray.forEach(candidate => {
-        candidate.score =
-            (candidate.fullName ? 0.1 : 0) +
-            (candidate.email ? 0.1 : 0) +
-            (candidate.password ? 0.1 : 0) +
-            (candidate.phone ? 0.2 : 0) +
-            (candidate.avatar ? 0.5 : 0);
+        candidate.score = calculateScore(candidate);
     });
     return candidatesArray;
 };
@@ -46,7 +42,7 @@ export const loadData = async () => {
         });
 
         // set application score
-        candidatesArray = calculateScore(candidatesArray);
+        candidatesArray = calculateScores(candidatesArray);
 
         // transform array to Candidates object
         candidates = candidatesArray.reduce((acc: Candidates, candidate) => {

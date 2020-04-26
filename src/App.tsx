@@ -11,6 +11,7 @@ import ViewListIcon from '@material-ui/icons/ViewList';
 import React, { useEffect, useState } from 'react';
 import { Link, Redirect, Route, Switch, useLocation } from 'react-router-dom';
 
+import CandidateView from './pages/CandidateView';
 import RecruiterView from './pages/RecruiterView';
 import { Candidates } from './common/types';
 import { loadData, saveData } from './store';
@@ -30,7 +31,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-// TODO: avoid prop drilling (candidates)
+// TODO: avoid prop drilling (candidates) -> use better Context API or Redux
 const App = () => {
     const classes = useStyles();
 
@@ -97,11 +98,7 @@ const App = () => {
             </AppBar>
             <Switch>
                 <Route
-                    component={() => (
-                        <Typography variant="h6">
-                            Coming soon ...
-                        </Typography>
-                    )}
+                    component={() => <CandidateView useCandidatesState={[candidates, setCandidates]} />}
                     exact
                     path={candidatePath}
                 />
