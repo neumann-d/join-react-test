@@ -4,6 +4,15 @@
 join-react-test Changelog
 ===========================
 
+[0.3.4] - 2020-04-27
+^^^^^^^^^^^^^^^^^^^^
+
+Improvements
+------------
+- Make email not a required field in CandidateView
+- Add id property to Candidate type and use it in candidates map as key (instead of email)
+
+
 [0.3.3] - 2020-04-27
 ^^^^^^^^^^^^^^^^^^^^
 
