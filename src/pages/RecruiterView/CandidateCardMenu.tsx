@@ -13,9 +13,11 @@ import Select from '@material-ui/core/Select';
 import { makeStyles } from '@material-ui/core/styles';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import React, { useState } from 'react';
+import { Dispatch } from 'redux';
+import { connect } from 'react-redux';
 
 import { Candidates, CandidateState } from '../../common/types';
-import { saveData } from '../../store';
+import { CandidatesAction, CandidatesActionTypes } from '../../store/actions';
 
 const useStyles = makeStyles(theme => ({
     avatar: {
@@ -49,10 +51,12 @@ const useStyles = makeStyles(theme => ({
 
 const CandidateCardMenu = ({
     candidateKey,
-    useCandidatesState
+    candidates,
+    setCandidates
 }: {
     candidateKey: string;
-    useCandidatesState: [Candidates, React.Dispatch<React.SetStateAction<Candidates>>];
+    candidates: Candidates;
+    setCandidates: Function;
 }) => {
     const classes = useStyles();
 
@@ -63,8 +67,6 @@ const CandidateCardMenu = ({
     const [openDialog, setOpenDialog] = useState(false);
     const [selectedState, setSelectedState] = useState<string>('');
 
-    const [candidatesState, setCandidates] = useCandidatesState;
-    const candidates = { ...candidatesState };
     const candidate = candidates[candidateKey];
 
     if (!candidate || candidate.deleted) {
@@ -85,14 +87,12 @@ const CandidateCardMenu = ({
 
     const handleDelete = (candidateKey: string) => {
         candidates[candidateKey].deleted = true;
-        saveData(candidates);
         setCandidates(candidates);
         handleCloseMenu();
     };
 
     const handleChangeState = () => {
         candidates[candidateKey].state = selectedState;
-        saveData(candidates);
         setCandidates(candidates);
         handleCloseChangeStateDialog();
     };
@@ -160,4 +160,17 @@ const CandidateCardMenu = ({
     );
 };
 
-export default CandidateCardMenu;
+const mapStateToProps = (candidates: Candidates) => {
+    return {
+        candidates
+    };
+};
+
+const mapDispatchToProps = (dispatch: Dispatch) => {
+    return {
+        setCandidates: (candidates: Candidates) =>
+            dispatch<CandidatesAction>({ type: CandidatesActionTypes.CANDIDATES, value: candidates })
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CandidateCardMenu);

@@ -3,17 +3,17 @@ import Container from '@material-ui/core/Container';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import { Candidates } from '../../common/types';
 import CandidateCard from './CandidateCard';
 import CandidateCardMenu from './CandidateCardMenu';
 
 const RecruiterView = ({
-    useCandidatesState
+    candidates,
 }: {
-    useCandidatesState: [Candidates, React.Dispatch<React.SetStateAction<Candidates>>];
+    candidates: Candidates;
 }) => {
-    const candidates = useCandidatesState[0];
     const candidateKeys = Object.keys(candidates);
 
     if (candidateKeys.length === 0) {
@@ -29,7 +29,7 @@ const RecruiterView = ({
                     </Typography>
                     {candidateKeys.map(candidateKey => {
                         const menu = (
-                            <CandidateCardMenu candidateKey={candidateKey} useCandidatesState={useCandidatesState} />
+                            <CandidateCardMenu candidateKey={candidateKey} />
                         );
                         return (
                             <CandidateCard
@@ -46,4 +46,10 @@ const RecruiterView = ({
     );
 };
 
-export default RecruiterView;
+const mapStateToProps = (candidates: Candidates) => {
+    return {
+        candidates
+    };
+}
+
+export default connect(mapStateToProps)(RecruiterView);

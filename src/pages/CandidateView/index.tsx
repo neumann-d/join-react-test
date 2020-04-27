@@ -4,16 +4,17 @@ import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import FormControl from '@material-ui/core/FormControl';
 import Grid from '@material-ui/core/Grid';
-import LinearProgress from '@material-ui/core/LinearProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { Dispatch } from 'redux';
 
 import { Candidate, Candidates, CandidateState } from '../../common/types';
 import { calculateScore } from '../../common/utils';
-import { saveData } from '../../store';
+import { CandidatesAction, CandidatesActionTypes } from '../../store/actions';
 import CandidateAvatarUpload from './CandidateAvatarUpload';
 
 const useStyles = makeStyles(theme => ({
@@ -35,16 +36,9 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const CandidateView = ({
-    useCandidatesState
-}: {
-    useCandidatesState: [Candidates, React.Dispatch<React.SetStateAction<Candidates>>];
-}) => {
+const CandidateView = ({ candidates, setCandidates }: { candidates: Candidates; setCandidates: Function }) => {
     const history = useHistory();
     const classes = useStyles();
-    const [candidatesState, setCandidates] = useCandidatesState;
-    const candidates = { ...candidatesState };
-    const candidateKeys = Object.keys(candidates);
 
     const emptyCandidate = {
         email: '',
@@ -85,8 +79,7 @@ const CandidateView = ({
             // calculate score
             candidates[candidate.email].score = calculateScore(candidateData);
 
-            // save candidate in local storage and global state
-            saveData(candidates);
+            // save updated candidates in global redux state
             setCandidates(candidates);
 
             // reset input values
@@ -97,100 +90,108 @@ const CandidateView = ({
         }
     };
 
-    const fetchDataLoading = candidateKeys.length === 0;
-
     return (
-        <>
-            {fetchDataLoading && <LinearProgress style={{ height: '1ch' }} color="secondary" />}
-            <Container maxWidth="sm">
-                <Box my={4}>
-                    <>
-                        <Typography variant="h6" component="h1" gutterBottom>
-                            Interested in this job?
-                        </Typography>
-                        <form className={classes.formContainer}>
-                            <Grid container spacing={3}>
-                                <Grid item xs={12}>
-                                    <FormControl className={classes.formControl}>
-                                        <Avatar className={classes.avatar} alt={candidate.fullName} src={avatar} />
-                                        <CandidateAvatarUpload
-                                            useAvatarState={[avatar, setAvatar]}
-                                            buttonText={avatar ? 'Change picture' : 'Upload picture'}
-                                        />
-                                    </FormControl>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <FormControl className={classes.formControl}>
-                                        <TextField
-                                            required
-                                            error={showErrorMessage.length > 0}
-                                            label="Your E-mail"
-                                            id="candidate-form-email"
-                                            variant="outlined"
-                                            placeholder="john.doe@example.com"
-                                            onChange={handleChange('email')}
-                                            helperText={showErrorMessage}
-                                            value={candidate.email}
-                                        />
-                                    </FormControl>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <FormControl className={classes.formControl}>
-                                        <TextField
-                                            label="Full Name"
-                                            id="candidate-form-full-name"
-                                            variant="outlined"
-                                            placeholder="John Doe"
-                                            onChange={handleChange('fullName')}
-                                            value={candidate.fullName}
-                                        />
-                                    </FormControl>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <FormControl className={classes.formControl}>
-                                        <TextField
-                                            label="Password"
-                                            id="candidate-form-password"
-                                            variant="outlined"
-                                            type="password"
-                                            placeholder="Choose a password"
-                                            onChange={handleChange('password')}
-                                            value={candidate.password}
-                                        />
-                                    </FormControl>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <FormControl className={classes.formControl}>
-                                        <TextField
-                                            label="Phone Number"
-                                            id="candidate-form-phone-number"
-                                            variant="outlined"
-                                            placeholder="1231122890"
-                                            onChange={handleChange('phone')}
-                                            value={candidate.phone}
-                                        />
-                                    </FormControl>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <FormControl className={classes.formControl}>
-                                        <Button
-                                            id="candidate-form-submit"
-                                            color="primary"
-                                            variant="contained"
-                                            onClick={handleSaveCandidate}
-                                            size="large"
-                                        >
-                                            Apply for this job
-                                        </Button>
-                                    </FormControl>
-                                </Grid>
+        <Container maxWidth="sm">
+            <Box my={4}>
+                <>
+                    <Typography variant="h6" component="h1" gutterBottom>
+                        Interested in this job?
+                    </Typography>
+                    <form className={classes.formContainer}>
+                        <Grid container spacing={3}>
+                            <Grid item xs={12}>
+                                <FormControl className={classes.formControl}>
+                                    <Avatar className={classes.avatar} alt={candidate.fullName} src={avatar} />
+                                    <CandidateAvatarUpload
+                                        useAvatarState={[avatar, setAvatar]}
+                                        buttonText={avatar ? 'Change picture' : 'Upload picture'}
+                                    />
+                                </FormControl>
                             </Grid>
-                        </form>
-                    </>
-                </Box>
-            </Container>
-        </>
+                            <Grid item xs={12}>
+                                <FormControl className={classes.formControl}>
+                                    <TextField
+                                        required
+                                        error={showErrorMessage.length > 0}
+                                        label="Your E-mail"
+                                        id="candidate-form-email"
+                                        variant="outlined"
+                                        placeholder="john.doe@example.com"
+                                        onChange={handleChange('email')}
+                                        helperText={showErrorMessage}
+                                        value={candidate.email}
+                                    />
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <FormControl className={classes.formControl}>
+                                    <TextField
+                                        label="Full Name"
+                                        id="candidate-form-full-name"
+                                        variant="outlined"
+                                        placeholder="John Doe"
+                                        onChange={handleChange('fullName')}
+                                        value={candidate.fullName}
+                                    />
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <FormControl className={classes.formControl}>
+                                    <TextField
+                                        label="Password"
+                                        id="candidate-form-password"
+                                        variant="outlined"
+                                        type="password"
+                                        placeholder="Choose a password"
+                                        onChange={handleChange('password')}
+                                        value={candidate.password}
+                                    />
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <FormControl className={classes.formControl}>
+                                    <TextField
+                                        label="Phone Number"
+                                        id="candidate-form-phone-number"
+                                        variant="outlined"
+                                        placeholder="1231122890"
+                                        onChange={handleChange('phone')}
+                                        value={candidate.phone}
+                                    />
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <FormControl className={classes.formControl}>
+                                    <Button
+                                        id="candidate-form-submit"
+                                        color="primary"
+                                        variant="contained"
+                                        onClick={handleSaveCandidate}
+                                        size="large"
+                                    >
+                                        Apply for this job
+                                    </Button>
+                                </FormControl>
+                            </Grid>
+                        </Grid>
+                    </form>
+                </>
+            </Box>
+        </Container>
     );
 };
 
-export default CandidateView;
+const mapStateToProps = (candidates: Candidates) => {
+    return {
+        candidates
+    };
+};
+
+const mapDispatchToProps = (dispatch: Dispatch) => {
+    return {
+        setCandidates: (candidates: Candidates) =>
+            dispatch<CandidatesAction>({ type: CandidatesActionTypes.CANDIDATES, value: candidates })
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CandidateView);

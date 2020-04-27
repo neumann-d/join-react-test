@@ -8,13 +8,11 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import PersonIcon from '@material-ui/icons/Person';
 import ViewListIcon from '@material-ui/icons/ViewList';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link, Redirect, Route, Switch, useLocation } from 'react-router-dom';
 
 import CandidateView from './pages/CandidateView';
 import RecruiterView from './pages/RecruiterView';
-import { Candidates } from './common/types';
-import { loadData, saveData } from './store';
 
 const useStyles = makeStyles(theme => ({
     logoBox: {
@@ -31,8 +29,6 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-// TODO: avoid prop drilling (candidates) -> use better Context API or Redux
-// TODO: make global candidates state safe (that is is not overridden while update) -> Redux
 const App = () => {
     const classes = useStyles();
 
@@ -41,20 +37,6 @@ const App = () => {
     const recruiterPath = '/recruiter';
 
     const [tabIndex, setTabIndex] = useState(candidatePath === pathName ? 0 : 1);
-    const [candidates, setCandidates] = useState<Candidates>({});
-
-    // try to fetch from API, otherwise use local JSON file
-    useEffect(() => {
-        const fetchData = async () => {
-            if (Object.keys(candidates).length === 0) {
-                const candidatesData = await loadData();
-                saveData(candidatesData);
-                setCandidates(candidatesData);
-            }
-        };
-
-        fetchData();
-    }, [candidates]);
 
     return (
         <>
@@ -99,15 +81,11 @@ const App = () => {
             </AppBar>
             <Switch>
                 <Route
-                    component={() => <CandidateView useCandidatesState={[candidates, setCandidates]} />}
+                    component={() => <CandidateView />}
                     exact
                     path={candidatePath}
                 />
-                <Route
-                    component={() => <RecruiterView useCandidatesState={[candidates, setCandidates]} />}
-                    exact
-                    path={recruiterPath}
-                />
+                <Route component={() => <RecruiterView />} exact path={recruiterPath} />
                 <Redirect to={recruiterPath} />
             </Switch>
         </>

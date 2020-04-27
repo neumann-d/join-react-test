@@ -40,7 +40,15 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const CandidateCard = ({ candidateKey, candidate, menu }: { candidateKey: string; candidate: Candidate, menu: JSX.Element | null }) => {
+const CandidateCard = ({
+    candidateKey,
+    candidate,
+    menu
+}: {
+    candidateKey: string;
+    candidate: Candidate;
+    menu: JSX.Element | null;
+}) => {
     const classes = useStyles();
 
     if (!candidate || candidate.deleted) {
