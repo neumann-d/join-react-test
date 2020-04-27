@@ -13,7 +13,7 @@ import { useHistory } from 'react-router-dom';
 import { Dispatch } from 'redux';
 
 import { Candidate, Candidates, CandidateState } from '../../common/types';
-import { calculateScore } from '../../common/utils';
+import { calculateScore, createId } from '../../common/utils';
 import { CandidatesAction, CandidatesActionTypes } from '../../store/actions';
 import CandidateAvatarUpload from './CandidateAvatarUpload';
 
@@ -41,6 +41,7 @@ const CandidateView = ({ candidates, setCandidates }: { candidates: Candidates; 
     const classes = useStyles();
 
     const emptyCandidate = {
+        id: '',
         email: '',
         applied_on: '',
         avatar: '',
@@ -52,42 +53,35 @@ const CandidateView = ({ candidates, setCandidates }: { candidates: Candidates; 
         state: ''
     };
     const [candidate, setCandidate] = useState(emptyCandidate);
-    const [showErrorMessage, setShowErrorMessage] = useState('');
     const [avatar, setAvatar] = useState('');
 
     const handleChange = (prop: keyof Candidate) => (event: React.ChangeEvent<HTMLInputElement>) => {
-        setShowErrorMessage('');
         setCandidate({ ...candidate, [prop]: event.target.value });
     };
 
-    const handleSaveCandidate = async () => {
-        if (!candidate.email) {
-            setShowErrorMessage('E-mail is required!');
-        } else if (candidate.email in candidates) {
-            setCandidate({ ...candidate, email: '' });
-            setShowErrorMessage('E-mail already in use!');
-        } else {
-            const now = new Date();
-            const candidateData = {
-                ...candidate,
-                avatar,
-                state: CandidateState.STATE_SUBMITTED,
-                applied_on: `${now.getUTCDate()}.${now.getUTCMonth() + 1}.${now.getUTCFullYear()}`
-            };
-            candidates[candidate.email] = candidateData;
+    const handleSaveCandidate = () => {
+        const now = new Date();
+        const id = createId();
+        const candidateData = {
+            ...candidate,
+            id,
+            avatar,
+            state: CandidateState.STATE_SUBMITTED,
+            applied_on: `${now.getUTCDate()}.${now.getUTCMonth() + 1}.${now.getUTCFullYear()}`
+        };
+        candidates[id] = candidateData;
 
-            // calculate score
-            candidates[candidate.email].score = calculateScore(candidateData);
+        // calculate score
+        candidates[id].score = calculateScore(candidateData);
 
-            // save updated candidates in global redux state
-            setCandidates(candidates);
+        // save updated candidates in global redux state
+        setCandidates(candidates);
 
-            // reset input values
-            setCandidate(emptyCandidate);
+        // reset input values
+        setCandidate(emptyCandidate);
 
-            // redirect to recruiter view
-            history.push('/recruiter');
-        }
+        // redirect to recruiter view
+        history.push('/recruiter');
     };
 
     return (
@@ -111,14 +105,11 @@ const CandidateView = ({ candidates, setCandidates }: { candidates: Candidates; 
                             <Grid item xs={12}>
                                 <FormControl className={classes.formControl}>
                                     <TextField
-                                        required
-                                        error={showErrorMessage.length > 0}
                                         label="Your E-mail"
                                         id="candidate-form-email"
                                         variant="outlined"
                                         placeholder="john.doe@example.com"
                                         onChange={handleChange('email')}
-                                        helperText={showErrorMessage}
                                         value={candidate.email}
                                     />
                                 </FormControl>

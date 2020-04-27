@@ -1,5 +1,11 @@
 import { Candidate } from './types';
 
+export const createId = () => {
+    const timestamp = new Date().getTime();
+    const randomNumber = Math.random() * 1000;
+    return `${timestamp}${randomNumber}`
+}
+
 export const calculateScore = (candidate: Candidate) => {
     const score =
         (candidate.fullName ? 0.1 : 0) +

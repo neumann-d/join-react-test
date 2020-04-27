@@ -41,11 +41,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const CandidateCard = ({
-    candidateKey,
+    candidateId,
     candidate,
     menu
 }: {
-    candidateKey: string;
+    candidateId: string;
     candidate: Candidate;
     menu: JSX.Element | null;
 }) => {
@@ -56,7 +56,7 @@ const CandidateCard = ({
     }
 
     return (
-        <Card key={candidateKey} className={classes.cardRoot}>
+        <Card key={candidateId} className={classes.cardRoot}>
             <CardContent>
                 <Grid container alignItems="center" justify="space-between">
                     <Grid item xs={2}>

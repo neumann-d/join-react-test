@@ -1,18 +1,20 @@
 import { render } from '@testing-library/react';
 import React from 'react';
-import { createStore } from 'redux';
 import { Provider as ReduxProvider } from 'react-redux';
+import { createStore } from 'redux';
 
-import RecruiterView from '../pages/RecruiterView';
 import { Candidate } from '../common/types';
-import rootReducer from '../store/reducers';
+import { createId } from '../common/utils';
+import RecruiterView from '../pages/RecruiterView';
 import { CandidatesAction, CandidatesActionTypes } from '../store/actions';
+import rootReducer from '../store/reducers';
 
 test('add candidate and rendering in recruiter tab', async () => {
     let candidate: HTMLElement = document.createElement('div');
     const fullName = 'Bob Test';
     const email = `bob.test@example.com`;
     const newCandidate: Candidate = {
+        id: createId(),
         email,
         fullName,
         applied_on: '26.04.2020',

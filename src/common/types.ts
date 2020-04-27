@@ -6,6 +6,7 @@ export enum CandidateState {
 }
 
 export interface Candidate {
+    id: string;
     fullName: string;
     email: string;
     password: string;

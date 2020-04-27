@@ -50,11 +50,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const CandidateCardMenu = ({
-    candidateKey,
+    candidateId,
     candidates,
     setCandidates
 }: {
-    candidateKey: string;
+    candidateId: string;
     candidates: Candidates;
     setCandidates: Function;
 }) => {
@@ -67,7 +67,7 @@ const CandidateCardMenu = ({
     const [openDialog, setOpenDialog] = useState(false);
     const [selectedState, setSelectedState] = useState<string>('');
 
-    const candidate = candidates[candidateKey];
+    const candidate = candidates[candidateId];
 
     if (!candidate || candidate.deleted) {
         return null;
@@ -92,7 +92,7 @@ const CandidateCardMenu = ({
     };
 
     const handleChangeState = () => {
-        candidates[candidateKey].state = selectedState;
+        candidates[candidateId].state = selectedState;
         setCandidates(candidates);
         handleCloseChangeStateDialog();
     };
@@ -154,7 +154,7 @@ const CandidateCardMenu = ({
                         </Button>
                     </DialogActions>
                 </Dialog>
-                <MenuItem onClick={() => handleDelete(candidateKey)}>Delete</MenuItem>
+                <MenuItem onClick={() => handleDelete(candidateId)}>Delete</MenuItem>
             </Menu>
         </>
     );

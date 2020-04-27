@@ -10,13 +10,13 @@ import CandidateCard from './CandidateCard';
 import CandidateCardMenu from './CandidateCardMenu';
 
 const RecruiterView = ({ candidates }: { candidates: Candidates }) => {
-    const candidateKeys = Object.keys(candidates);
+    const candidateIds = Object.keys(candidates);
 
-    if (candidateKeys.length === 0) {
+    if (candidateIds.length === 0) {
         return <LinearProgress style={{ height: '1ch' }} color="secondary" />;
     }
 
-    const numberUndeletedCandidates = candidateKeys.reduce(
+    const numberUndeletedCandidates = candidateIds.reduce(
         (acc: number, curr: string) => (candidates[curr].deleted ? acc : acc + 1),
         0
     );
@@ -28,13 +28,13 @@ const RecruiterView = ({ candidates }: { candidates: Candidates }) => {
                     <Typography variant="h6" component="h1" gutterBottom>
                         {numberUndeletedCandidates} applications submitted
                     </Typography>
-                    {candidateKeys.map(candidateKey => {
-                        const menu = <CandidateCardMenu candidateKey={candidateKey} />;
+                    {candidateIds.map(candidateId => {
+                        const menu = <CandidateCardMenu candidateId={candidateId} />;
                         return (
                             <CandidateCard
-                                key={candidateKey}
-                                candidateKey={candidateKey}
-                                candidate={candidates[candidateKey]}
+                                key={candidateId}
+                                candidateId={candidateId}
+                                candidate={candidates[candidateId]}
                                 menu={menu}
                             />
                         );

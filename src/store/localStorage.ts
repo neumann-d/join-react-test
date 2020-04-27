@@ -1,5 +1,5 @@
 import { Candidate, Candidates } from '../common/types';
-import { calculateScore } from '../common/utils';
+import { calculateScore, createId } from '../common/utils';
 
 const calculateScores = (candidatesArrayIn: Candidate[]) => {
     const candidatesArray = [...candidatesArrayIn];
@@ -36,8 +36,9 @@ export const loadData = async () => {
             } catch (e) {}
         }
 
-        // set deleted to false by default
+        // create id and set deleted to false by default
         candidatesArray.forEach(candidate => {
+            candidate.id = createId();
             candidate.deleted = false;
         });
 
@@ -46,7 +47,7 @@ export const loadData = async () => {
 
         // transform array to Candidates object
         candidates = candidatesArray.reduce((acc: Candidates, candidate) => {
-            acc[candidate.email] = candidate;
+            acc[candidate.id] = candidate;
             return acc;
         }, {});
     }
