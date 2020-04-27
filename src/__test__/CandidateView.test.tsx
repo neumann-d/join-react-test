@@ -1,33 +1,39 @@
 import { render, fireEvent } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
-import React, { useState } from 'react';
+import React from 'react';
 import { Router } from 'react-router-dom';
+import { createStore } from 'redux';
+import { Provider as ReduxProvider } from 'react-redux';
 
 import CandidateView from '../pages/CandidateView';
-import { Candidate, Candidates } from '../common/types';
+import { Candidate } from '../common/types';
+import rootReducer from '../store/reducers';
+import { CandidatesAction, CandidatesActionTypes } from '../store/actions';
 
 test('test invalid empty email in candidate tab', async () => {
-    const TestCandidateViewComponent = () => {
-        const emptyCandidate: Candidate = {
-            email: '',
-            applied_on: '',
-            avatar: '',
-            password: '',
-            deleted: false,
-            fullName: '',
-            phone: '',
-            score: 0,
-            state: ''
-        };
-        const [candidates, setCandidates] = useState<Candidates>({ [emptyCandidate.email]: emptyCandidate });
-        return <CandidateView useCandidatesState={[candidates, setCandidates]} />;
+    const emptyCandidate: Candidate = {
+        email: '',
+        applied_on: '',
+        avatar: '',
+        password: '',
+        deleted: false,
+        fullName: '',
+        phone: '',
+        score: 0,
+        state: ''
     };
+
+    const store = createStore(rootReducer);
+    const candidates = { [emptyCandidate.email]: emptyCandidate };
+    store.dispatch<CandidatesAction>({ type: CandidatesActionTypes.CANDIDATES, value: candidates });
 
     const history = createMemoryHistory();
     render(
-        <Router history={history}>
-            <TestCandidateViewComponent />
-        </Router>
+        <ReduxProvider store={store}>
+            <Router history={history}>
+                <CandidateView />
+            </Router>
+        </ReduxProvider>
     );
 
     const emailInput = document.getElementById('candidate-form-email') || document.createElement('input');
@@ -43,27 +49,28 @@ test('test invalid empty email in candidate tab', async () => {
 });
 
 test('test invalid existing email in candidate tab', async () => {
-    const TestCandidateViewComponent = () => {
-        const exampleCandidate: Candidate = {
-            email: 'john.doe@example.com',
-            applied_on: '',
-            avatar: '',
-            password: '',
-            deleted: false,
-            fullName: '',
-            phone: '',
-            score: 0,
-            state: ''
-        };
-        const [candidates, setCandidates] = useState<Candidates>({ [exampleCandidate.email]: exampleCandidate });
-        return <CandidateView useCandidatesState={[candidates, setCandidates]} />;
+    const exampleCandidate: Candidate = {
+        email: 'john.doe@example.com',
+        applied_on: '',
+        avatar: '',
+        password: '',
+        deleted: false,
+        fullName: '',
+        phone: '',
+        score: 0,
+        state: ''
     };
+    const store = createStore(rootReducer);
+    const candidates = { [exampleCandidate.email]: exampleCandidate };
+    store.dispatch<CandidatesAction>({ type: CandidatesActionTypes.CANDIDATES, value: candidates });
 
     const history = createMemoryHistory();
     render(
-        <Router history={history}>
-            <TestCandidateViewComponent />
-        </Router>
+        <ReduxProvider store={store}>
+            <Router history={history}>
+                <CandidateView />
+            </Router>
+        </ReduxProvider>
     );
 
     const emailInput = document.getElementById('candidate-form-email') || document.createElement('input');
@@ -90,21 +97,17 @@ test('test sucessfully create new candidate in candidate tab', async () => {
         score: 0,
         state: ''
     };
-    let candidates: Candidates = {
-        [exampleCandidate.email]: exampleCandidate
-    };
-    const TestCandidateViewComponent = () => {
-        const [candidateState, setCandidatesState] = useState<Candidates>(candidates);
-        candidates = { ...candidates, ...candidateState };
-        // console.log('render: candidates = ', candidates);
-        return <CandidateView useCandidatesState={[candidateState, setCandidatesState]} />;
-    };
+    const store = createStore(rootReducer);
+    const candidates = { [exampleCandidate.email]: exampleCandidate };
+    store.dispatch<CandidatesAction>({ type: CandidatesActionTypes.CANDIDATES, value: candidates });
 
     const history = createMemoryHistory();
     render(
-        <Router history={history}>
-            <TestCandidateViewComponent />;
-        </Router>
+        <ReduxProvider store={store}>
+            <Router history={history}>
+                <CandidateView />
+            </Router>
+        </ReduxProvider>
     );
 
     const emailInput = document.getElementById('candidate-form-email') || document.createElement('input');
@@ -119,7 +122,9 @@ test('test sucessfully create new candidate in candidate tab', async () => {
     fireEvent.change(passwordInput, { target: { value: 'abc123' } });
     fireEvent.click(submitButton);
 
-    // console.log('candidates = ', candidates);
-
-    expect(candidates[emailInputValue].fullName).toBe(fullName);
+    store.subscribe(() => {
+        const updatedCandidates = store.getState();
+        // console.log('updatedCandidates = ', updatedCandidates);
+        expect(updatedCandidates[emailInputValue].fullName).toBe(fullName);
+    });
 });

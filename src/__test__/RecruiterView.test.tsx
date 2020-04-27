@@ -1,8 +1,12 @@
 import { render } from '@testing-library/react';
-import React, { useState } from 'react';
+import React from 'react';
+import { createStore } from 'redux';
+import { Provider as ReduxProvider } from 'react-redux';
 
 import RecruiterView from '../pages/RecruiterView';
-import { Candidate, Candidates } from '../common/types';
+import { Candidate } from '../common/types';
+import rootReducer from '../store/reducers';
+import { CandidatesAction, CandidatesActionTypes } from '../store/actions';
 
 test('add candidate and rendering in recruiter tab', async () => {
     let candidate: HTMLElement = document.createElement('div');
@@ -19,13 +23,15 @@ test('add candidate and rendering in recruiter tab', async () => {
         score: 1.0,
         deleted: false
     };
+    const store = createStore(rootReducer);
+    const candidates = { testEmail: newCandidate };
+    store.dispatch<CandidatesAction>({ type: CandidatesActionTypes.CANDIDATES, value: candidates });
 
-    const TestRecruiterViewComponent = () => {
-        const [candidates, setCandidates] = useState<Candidates>({ testEmail: newCandidate });
-        return <RecruiterView useCandidatesState={[candidates, setCandidates]} />;
-    };
-
-    const { findByText } = render(<TestRecruiterViewComponent />);
+    const { findByText } = render(
+        <ReduxProvider store={store}>
+            <RecruiterView />
+        </ReduxProvider>
+    );
     candidate = await findByText(email);
 
     expect(candidate).toBeInTheDocument();
