@@ -4,6 +4,19 @@
 join-react-test Changelog
 ===========================
 
+[0.3.2] - 2020-04-27
+^^^^^^^^^^^^^^^^^^^^
+
+Improvements
+------------
+- Integrate Redux to share global candidates state across multiple components
+- Change app title to "join-react-test"
+
+Bugfixes
+------------
+- Fix wrong tab highlighting after redirect from CandidateView to RecruiterView when new candidate was created
+
+
 [0.3.1] - 2020-04-27
 ^^^^^^^^^^^^^^^^^^^^
 
