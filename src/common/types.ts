@@ -1,7 +1,8 @@
 export enum CandidateState {
     STATE_SUBMITTED = 'submitted',
     STATE_IN_REVIEW = 'in review',
-    STATE_NOT_A_FIT = 'not a fit'
+    STATE_NOT_A_FIT = 'not a fit',
+    STATE_HIRED = 'hired',
 }
 
 export interface Candidate {

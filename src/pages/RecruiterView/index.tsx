@@ -9,28 +9,27 @@ import { Candidates } from '../../common/types';
 import CandidateCard from './CandidateCard';
 import CandidateCardMenu from './CandidateCardMenu';
 
-const RecruiterView = ({
-    candidates,
-}: {
-    candidates: Candidates;
-}) => {
+const RecruiterView = ({ candidates }: { candidates: Candidates }) => {
     const candidateKeys = Object.keys(candidates);
 
     if (candidateKeys.length === 0) {
         return <LinearProgress style={{ height: '1ch' }} color="secondary" />;
     }
 
+    const numberUndeletedCandidates = candidateKeys.reduce(
+        (acc: number, curr: string) => (candidates[curr].deleted ? acc : acc + 1),
+        0
+    );
+
     return (
         <Container maxWidth="sm">
             <Box my={4}>
                 <>
                     <Typography variant="h6" component="h1" gutterBottom>
-                        {candidateKeys.length} applications submitted
+                        {numberUndeletedCandidates} applications submitted
                     </Typography>
                     {candidateKeys.map(candidateKey => {
-                        const menu = (
-                            <CandidateCardMenu candidateKey={candidateKey} />
-                        );
+                        const menu = <CandidateCardMenu candidateKey={candidateKey} />;
                         return (
                             <CandidateCard
                                 key={candidateKey}
@@ -50,6 +49,6 @@ const mapStateToProps = (candidates: Candidates) => {
     return {
         candidates
     };
-}
+};
 
 export default connect(mapStateToProps)(RecruiterView);
