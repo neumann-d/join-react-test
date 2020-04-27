@@ -4,6 +4,18 @@
 join-react-test Changelog
 ===========================
 
+[0.3.3] - 2020-04-27
+^^^^^^^^^^^^^^^^^^^^
+
+Improvements
+------------
+- Add "hired" candidate state
+
+Bugfixes
+------------
+- Fix wrong number of candidates in RecruiterView's title (deleted candidates should not count)
+
+
 [0.3.2] - 2020-04-27
 ^^^^^^^^^^^^^^^^^^^^
 
