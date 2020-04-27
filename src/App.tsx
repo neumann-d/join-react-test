@@ -36,7 +36,13 @@ const App = () => {
     const candidatePath = '/candidate';
     const recruiterPath = '/recruiter';
 
-    const [tabIndex, setTabIndex] = useState(candidatePath === pathName ? 0 : 1);
+    const calculatedTabIndex = candidatePath === pathName ? 0 : 1;
+    const [tabIndex, setTabIndex] = useState(calculatedTabIndex);
+
+    // tabIndex state may not up to date, when redirected from other component
+    if (tabIndex !== calculatedTabIndex) {
+        setTabIndex(calculatedTabIndex);
+    }
 
     return (
         <>
@@ -80,11 +86,7 @@ const App = () => {
                 </Toolbar>
             </AppBar>
             <Switch>
-                <Route
-                    component={() => <CandidateView />}
-                    exact
-                    path={candidatePath}
-                />
+                <Route component={() => <CandidateView />} exact path={candidatePath} />
                 <Route component={() => <RecruiterView />} exact path={recruiterPath} />
                 <Redirect to={recruiterPath} />
             </Switch>
